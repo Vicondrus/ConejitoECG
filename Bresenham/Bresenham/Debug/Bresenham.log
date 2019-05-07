@@ -3,6 +3,6 @@ e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(49): warning
 e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(51): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
 e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(52): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
 e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(53): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(98): warning C4018: '<': signed/unsigned mismatch
-e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(319): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(115): warning C4018: '<': signed/unsigned mismatch
+e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(343): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
   Bresenham.vcxproj -> E:\Users\Victor\source\repos\Lab_ECG_8\Bresenham\Debug\Bresenham.exe

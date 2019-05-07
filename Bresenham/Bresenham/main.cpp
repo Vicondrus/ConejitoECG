@@ -53,14 +53,29 @@ void drawWireframeTriangle(SDL_Renderer *renderer, egc::vec4 vertex1, egc::vec4 
     SDL_RenderDrawLine(renderer, vertex2.x, -(vertex2.y - dy), vertex3.x, -(vertex3.y - dy));
 }
 
+float absolute(float x)
+{
+	if (x >= 0)
+		return x;
+	else
+		return -x;
+}
+
 bool clipPointInHomogeneousCoordinate(egc::vec4 vertex)
 {
-
+	if (vertex.x<-absolute(vertex.w) || vertex.x>absolute(vertex.w))
+		return false;
+	if (vertex.y<-absolute(vertex.w) || vertex.y>absolute(vertex.w))
+		return false;
+	if (vertex.z<-absolute(vertex.w) || vertex.z>absolute(vertex.w))
+		return false;
     return true;
 }
 
 bool clipTriangleInHomegeneousCoordinates(egc::vec4 vertex1, egc::vec4 vertex2, egc::vec4 vertex3)
 {
+	if (!clipPointInHomogeneousCoordinate(vertex1) || !clipPointInHomogeneousCoordinate(vertex2) || !clipPointInHomogeneousCoordinate(vertex3))
+		return false;
     return true;
 }
 
@@ -80,12 +95,16 @@ egc::vec4 findCenterPointOfTriangle(egc::vec4 vertex1, egc::vec4 vertex2, egc::v
 
 bool isTriangleVisible(egc::vec4 vertex1, egc::vec4 vertex2, egc::vec4 vertex3, egc::vec3 normalVector)
 {
+	egc::vec3 norm = findNormalVectorToTriangle(vertex1, vertex2, vertex3);
+	if (egc::dotProduct(norm, normalVector) >= 0)
+		return false;
     return true;
 }
 
 void displayNormalVectors(egc::vec3 normalVector, egc::vec4 triangleCenter)
 {
-    
+	int dy = 2 * viewportTopLeftCorner.y + viewportDimensions.y;
+	SDL_RenderDrawLine(renderer, triangleCenter.x, -(triangleCenter.y - dy), triangleCenter.x + normalVector.x * 10, -(triangleCenter.y + normalVector.y * 10 - dy));
 }
 
 void renderMesh(SDL_Renderer *renderer, std::vector<tinyobj::shape_t> shapes)
@@ -109,18 +128,30 @@ void renderMesh(SDL_Renderer *renderer, std::vector<tinyobj::shape_t> shapes)
 			tempVertex1 = modelMatrix * tempVertex1;
 			tempVertex1 = cameraMatrix * tempVertex1;
 			tempVertex1 = perspectiveMatrix * tempVertex1;
-			egc::perspectiveDivide(tempVertex1);
-			tempVertex1 = viewTransformMatrix * tempVertex1;
+
 
 			tempVertex2 = modelMatrix * tempVertex2;
 			tempVertex2 = cameraMatrix * tempVertex2;
 			tempVertex2 = perspectiveMatrix * tempVertex2;
-			egc::perspectiveDivide(tempVertex2);
-			tempVertex2 = viewTransformMatrix * tempVertex2;
+
+
 
 			tempVertex3 = modelMatrix * tempVertex3;
 			tempVertex3 = cameraMatrix * tempVertex3;
 			tempVertex3 = perspectiveMatrix * tempVertex3;
+
+			if (!clipTriangleInHomegeneousCoordinates(tempVertex1, tempVertex2, tempVertex3))
+				continue;
+
+			if (!isTriangleVisible(tempVertex1, tempVertex2, tempVertex3, myCamera.cameraTarget))
+				continue;
+
+			displayNormalVectors(findNormalVectorToTriangle(tempVertex1, tempVertex2, tempVertex3), findCenterPointOfTriangle(tempVertex1, tempVertex2, tempVertex3));
+
+			egc::perspectiveDivide(tempVertex1);
+			tempVertex1 = viewTransformMatrix * tempVertex1;
+			egc::perspectiveDivide(tempVertex2);
+			tempVertex2 = viewTransformMatrix * tempVertex2;
 			egc::perspectiveDivide(tempVertex3);
 			tempVertex3 = viewTransformMatrix * tempVertex3;
 
