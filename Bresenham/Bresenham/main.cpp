@@ -38,11 +38,25 @@ egc::mat4 perspectiveMatrix;
 egc::mat4 modelMatrix;
 egc::Camera myCamera;
 
+const unsigned int VIEWPORT_WIDTH = 400;
+const unsigned int VIEWPORT_HEIGHT = 400;
+
 egc::vec2 viewportTopLeftCorner(30, 30);
-egc::vec2 viewportDimensions(400, 400);
+egc::vec2 viewportDimensions(VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
+
+float depthBuffer[VIEWPORT_WIDTH][VIEWPORT_HEIGHT];
 
 bool backFaceCulling = true;
 bool displayNormals = false;
+bool doNotDepth = false;
+
+void initDepthBuffer()
+{
+	for (int i = 0; i < VIEWPORT_WIDTH; i++)
+		for (int j = 0; j < VIEWPORT_HEIGHT; j++)
+			depthBuffer[i][j] = -1;
+
+}
 
 void drawWireframeTriangle(SDL_Renderer *renderer, egc::vec4 vertex1, egc::vec4 vertex2, egc::vec4 vertex3)
 {
@@ -135,10 +149,11 @@ float lineEquation(egc::vec4 vertex1, egc::vec4 vertex2, float x, float y)
 	return (vertex1.y - vertex2.y)*x + (vertex2.x - vertex1.x)*y + vertex1.x*vertex2.y - vertex2.x*vertex1.y;
 }
 
-void triangleRasterization(egc::vec4 vertex1, egc::vec4 vertex2, egc::vec4 vertex3)
+void triangleRasterization(egc::vec4 vertex1, egc::vec4 vertex2, egc::vec4 vertex3, egc::vec3 colorA, egc::vec3 colorB, egc::vec3 colorC)
 {
 	egc::vec4 leftUp;
 	egc::vec4 rightDown;
+	egc::vec3 color;
 	leftUp.x = std::min(vertex1.x, std::min(vertex2.x, vertex3.x));
 	rightDown.x = std::max(vertex1.x, std::max(vertex2.x, vertex3.x));
 	leftUp.y = std::min(vertex1.y, std::min(vertex2.y, vertex3.y));
@@ -152,21 +167,52 @@ void triangleRasterization(egc::vec4 vertex1, egc::vec4 vertex2, egc::vec4 verte
 			float c = 1 - a - b;
 			if (a > 0 && a < 1 && b > 0 && b < 1 && c > 0 && c < 1)
 			{
-				SDL_SetRenderDrawColor(renderer, 96, 0, 0, 0);
-				int dy = 2 * viewportTopLeftCorner.y + viewportDimensions.y;
-				SDL_RenderDrawPoint(renderer, i, -(j - dy));
+				float zPixel = a * vertex1.z + b * vertex2.z + c * vertex3.z;
+				if ((zPixel > depthBuffer[i][j]) || doNotDepth)
+				{
+					depthBuffer[i][j] = zPixel;
+					color = colorA * a + colorB * b + colorC * c;
+					SDL_SetRenderDrawColor(renderer, color.x, color.y, color.z, 0);
+					int dy = 2 * viewportTopLeftCorner.y + viewportDimensions.y;
+					SDL_RenderDrawPoint(renderer, i, -(j - dy));
+				}
 			}
+		}
+	}
+}
+
+float zMin, zMax;
+
+void findMinMax(std::vector<tinyobj::shape_t> shapes)
+{
+	zMin = 10.0f;
+	zMax = -10.0f;
+	for (size_t i = 0; i < shapes.size(); i++) {
+
+		for (int f = 0; f < shapes[i].mesh.indices.size() / 3; f++) {
+			int vertexId1 = shapes[i].mesh.indices[3 * f + 0];
+			int vertexId2 = shapes[i].mesh.indices[3 * f + 1];
+			int vertexId3 = shapes[i].mesh.indices[3 * f + 2];
+
+			egc::vec4 tempVertex1 = egc::vec4(shapes[i].mesh.positions[3 * vertexId1 + 0], shapes[i].mesh.positions[3 * vertexId1 + 1], shapes[i].mesh.positions[3 * vertexId1 + 2], 1);
+			egc::vec4 tempVertex2 = egc::vec4(shapes[i].mesh.positions[3 * vertexId2 + 0], shapes[i].mesh.positions[3 * vertexId2 + 1], shapes[i].mesh.positions[3 * vertexId2 + 2], 1);
+			egc::vec4 tempVertex3 = egc::vec4(shapes[i].mesh.positions[3 * vertexId3 + 0], shapes[i].mesh.positions[3 * vertexId3 + 1], shapes[i].mesh.positions[3 * vertexId3 + 2], 1);
+
+			zMin = std::min(zMin, std::min(tempVertex1.z, std::min(tempVertex2.z, tempVertex3.z)));
+			zMax = std::max(zMax, std::max(tempVertex1.z, std::max(tempVertex2.z, tempVertex3.z)));
 		}
 	}
 }
 
 void renderMesh(SDL_Renderer *renderer, std::vector<tinyobj::shape_t> shapes)
 {
+	egc::vec3 color1, color2, color3;
+	float depthCoeff;
 	//for each mesh in the 3d model representation
 	for (size_t i = 0; i < shapes.size(); i++) {
 		//for each triangle
 
-#pragma omp parallel for
+//#pragma omp parallel for  //uncomment for disco bun
 
 		for (int f = 0; f < shapes[i].mesh.indices.size() / 3; f++) {
 			int vertexId1 = shapes[i].mesh.indices[3 * f + 0];
@@ -177,6 +223,13 @@ void renderMesh(SDL_Renderer *renderer, std::vector<tinyobj::shape_t> shapes)
 			egc::vec4 tempVertex1 = egc::vec4(shapes[i].mesh.positions[3 * vertexId1 + 0], shapes[i].mesh.positions[3 * vertexId1 + 1], shapes[i].mesh.positions[3 * vertexId1 + 2], 1);
 			egc::vec4 tempVertex2 = egc::vec4(shapes[i].mesh.positions[3 * vertexId2 + 0], shapes[i].mesh.positions[3 * vertexId2 + 1], shapes[i].mesh.positions[3 * vertexId2 + 2], 1);
 			egc::vec4 tempVertex3 = egc::vec4(shapes[i].mesh.positions[3 * vertexId3 + 0], shapes[i].mesh.positions[3 * vertexId3 + 1], shapes[i].mesh.positions[3 * vertexId3 + 2], 1);
+
+			depthCoeff = 255.0*(tempVertex1.z - zMin) / (zMax - zMin);
+			color1 = egc::vec3(depthCoeff, depthCoeff, depthCoeff);
+			depthCoeff = 255.0*(tempVertex2.z - zMin) / (zMax - zMin);
+			color2 = egc::vec3(depthCoeff, depthCoeff, depthCoeff);
+			depthCoeff = 255.0*(tempVertex3.z - zMin) / (zMax - zMin);
+			color3 = egc::vec3(depthCoeff, depthCoeff, depthCoeff);
 
 			tempVertex1 = modelMatrix * tempVertex1;
 			tempVertex2 = modelMatrix * tempVertex2;
@@ -210,8 +263,8 @@ void renderMesh(SDL_Renderer *renderer, std::vector<tinyobj::shape_t> shapes)
 			tempVertex3 = viewTransformMatrix * tempVertex3;
 
 			SDL_SetRenderDrawColor(renderer, 96, 96, 96, 0);
-			drawWireframeTriangle(renderer, tempVertex1, tempVertex2, tempVertex3);
-			triangleRasterization(tempVertex1, tempVertex2, tempVertex3);
+			//drawWireframeTriangle(renderer, tempVertex1, tempVertex2, tempVertex3);
+			triangleRasterization(tempVertex1, tempVertex2, tempVertex3, color1, color2, color3);
 		}
 	}
 }
@@ -388,6 +441,14 @@ void handleKeyboardEvents()
 			displayNormals = false;
 			break;
 
+		case SDLK_f:
+			doNotDepth = false;
+			break;
+
+		case SDLK_r:
+			doNotDepth = true;
+			break;
+
 		default:
 			break;
 		}
@@ -407,6 +468,8 @@ int main(int argc, char * argv[]) {
 	perspectiveMatrix = egc::definePerspectiveProjectionMatrix(45.0f, 1.0, -0.1f, -10.0f);
 
 	std::vector<tinyobj::shape_t> shapes = readOBJ();
+	
+	findMinMax(shapes);
 
 	SDL_Rect viewportRectangle = { static_cast<int>(viewportTopLeftCorner.x), static_cast<int>(viewportTopLeftCorner.y), static_cast<int>(viewportDimensions.x), static_cast<int>(viewportDimensions.y) };
 
@@ -424,6 +487,8 @@ int main(int argc, char * argv[]) {
 			handleKeyboardEvents();
 
 			//Clear screen
+			initDepthBuffer();
+
 			SDL_SetRenderDrawColor(renderer, 224, 224, 224, 0);
 			SDL_RenderClear(renderer);
 

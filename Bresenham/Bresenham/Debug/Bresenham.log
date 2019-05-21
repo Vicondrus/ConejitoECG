@@ -1,16 +1,21 @@
 ﻿  main.cpp
-e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(49): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(51): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(52): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(53): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(106): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(115): warning C4305: 'initializing': truncation from 'double' to 'float'
-e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(130): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(146): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(148): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(150): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(151): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(156): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(171): warning C4018: '<': signed/unsigned mismatch
-e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(405): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(63): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(65): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(66): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(67): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(120): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(129): warning C4305: 'initializing': truncation from 'double' to 'float'
+e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(144): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(161): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(163): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(165): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(166): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(175): warning C4244: 'argument': conversion from 'float' to 'Uint8', possible loss of data
+e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(176): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(192): warning C4018: '<': signed/unsigned mismatch
+e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(217): warning C4018: '<': signed/unsigned mismatch
+e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(227): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(229): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(231): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(466): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
   Bresenham.vcxproj -> E:\Users\Victor\source\repos\Lab_ECG_8\Bresenham\Debug\Bresenham.exe
