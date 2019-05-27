@@ -17,5 +17,5 @@ e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(217): warnin
 e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(227): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(229): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(231): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(466): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+e:\users\victor\source\repos\lab_ecg_8\bresenham\bresenham\main.cpp(468): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
   Bresenham.vcxproj -> E:\Users\Victor\source\repos\Lab_ECG_8\Bresenham\Debug\Bresenham.exe

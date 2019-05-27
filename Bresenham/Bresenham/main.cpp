@@ -109,7 +109,7 @@ egc::vec4 findCenterPointOfTriangle(egc::vec4 vertex1, egc::vec4 vertex2, egc::v
 
 bool isTriangleVisible(egc::vec4 vertex1, egc::vec4 vertex2, egc::vec4 vertex3, egc::vec3 normalVector)
 {
-	egc::vec3 norm = findNormalVectorToTriangle(vertex1, vertex2, vertex3);
+	egc::vec3 norm = egc::vec3(vertex1);//findNormalVectorToTriangle(vertex1, vertex2, vertex3);
 	if (egc::dotProduct(norm, normalVector) >= 0)
 		return false;
 	return true;
@@ -239,7 +239,7 @@ void renderMesh(SDL_Renderer *renderer, std::vector<tinyobj::shape_t> shapes)
 			tempVertex2 = cameraMatrix * tempVertex2;
 			tempVertex3 = cameraMatrix * tempVertex3;
 
-			if (backFaceCulling && !isTriangleVisible(tempVertex1, tempVertex2, tempVertex3, myCamera.cameraTarget))
+			if (backFaceCulling && !isTriangleVisible(tempVertex1, tempVertex2, tempVertex3, findNormalVectorToTriangle(tempVertex1, tempVertex2, tempVertex3)))
 				continue;
 
 			egc::vec3 normal = findNormalVectorToTriangle(tempVertex1, tempVertex2, tempVertex3);
@@ -257,8 +257,10 @@ void renderMesh(SDL_Renderer *renderer, std::vector<tinyobj::shape_t> shapes)
 
 			egc::perspectiveDivide(tempVertex1);
 			tempVertex1 = viewTransformMatrix * tempVertex1;
+			
 			egc::perspectiveDivide(tempVertex2);
 			tempVertex2 = viewTransformMatrix * tempVertex2;
+			
 			egc::perspectiveDivide(tempVertex3);
 			tempVertex3 = viewTransformMatrix * tempVertex3;
 
